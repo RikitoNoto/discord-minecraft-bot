@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/base:ubuntu
+FROM mcr.microsoft.com/devcontainers/python:3.10
 ENV WORKSPACE_DIR "/workspace"
-# Install the xz-utils package
-RUN apt-get update && apt-get install -y xz-utils
+RUN apt-get update
+
