@@ -5,6 +5,7 @@ from datetime import timedelta
 from discord.abc import Messageable
 from discord import TextChannel, Message, Thread
 from dotenv import load_dotenv
+from langchain.agents import AgentType, initialize_agent, load_tools
 from langchain.chains import ConversationChain
 from langchain.chat_models import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
@@ -56,10 +57,11 @@ async def on_message(message: Message):
             model_name=os.environ["OPENAI_API_MODEL"],
             temperature=os.environ["OPENAI_API_TEMPERATURE"],
         )
+        tools = load_tools(["ddg-search"])
+        agent_chain = initialize_agent(tools, chat, agent=AgentType.OPENAI_MULTI_FUNCTIONS)
+        response = agent_chain.run(messages)
 
-        response = chat(messages)
-
-        await thread.send(f"{message.author.mention}\n{response.content}")
+        await thread.send(f"{message.author.mention}\n{response}")
 
 
 if __name__ == "__main__":
